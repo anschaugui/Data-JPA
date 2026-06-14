@@ -3,6 +3,7 @@ package com.example.libraryapi.model;
 import com.example.libraryapi.enums.GeneroLivro;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.UUID;
 @Entity
 @Table(name = "livro")
 @Data
+@ToString
 public class Livro {
 
     @Id
@@ -33,7 +35,11 @@ public class Livro {
     @Column(name = "preco", precision = 18, scale = 2)
     private BigDecimal preco;
 
-    @ManyToOne
+    @ManyToOne(
+            fetch = FetchType.LAZY
+            // sempre que tivermos relacionamento ToOne o comportamento padrão é o EAGER que retorna no select os dados compleos
+            // Lazy retorna somente da entidade que realizamos o select
+    )
     @JoinColumn(name = "id_autor")
     private Autor autor;
 
