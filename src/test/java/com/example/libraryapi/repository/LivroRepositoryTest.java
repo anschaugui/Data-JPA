@@ -3,8 +3,6 @@ package com.example.libraryapi.repository;
 import com.example.libraryapi.enums.GeneroLivro;
 import com.example.libraryapi.model.Autor;
 import com.example.libraryapi.model.Livro;
-import org.hibernate.internal.util.collections.ArrayHelper;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -54,7 +52,7 @@ class LivroRepositoryTest {
 
         // saiu de transient para persistido
         Autor autor = new Autor();
-        autor.setName("Teste 200");
+        autor.setNome("Teste 200");
         autor.setNacionalidade("Marroquino");
         autor.setDataNascimento(LocalDate.of(1824, 1, 31).atStartOfDay());
         // salvando o autor
@@ -103,7 +101,7 @@ class LivroRepositoryTest {
     void buscarLivroTest() {
         UUID id = UUID.fromString("b6ab7b21-1199-415a-89ac-f89ed9884f6d");
         repository.findById(id).ifPresent(livro -> System.out.println("Livro: " + livro.getTitulo() +
-               " Autor: "+ livro.getAutor().getName()));
+               " Autor: "+ livro.getAutor().getNome()));
     }
 
     @Test

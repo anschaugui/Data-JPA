@@ -6,7 +6,6 @@ import com.example.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -26,7 +25,7 @@ public class AutorRepositoryTest {
     @Test
     public void salvarTest(){
         Autor autor = new Autor();
-        autor.setName("Maria");
+        autor.setNome("Maria");
         autor.setNacionalidade("Italiana");
         autor.setDataNascimento(LocalDate.of(1984, 1, 31).atStartOfDay());
 
@@ -47,7 +46,7 @@ public class AutorRepositoryTest {
             System.out.println("Autor: " + possivelAutor.get());
 
             autorEncontrado.setDataNascimento(LocalDate.of(1984, 2, 25).atStartOfDay());
-            autorEncontrado.setName("José");
+            autorEncontrado.setNome("José");
             repository.save(autorEncontrado);
         }
     }
@@ -87,7 +86,7 @@ public class AutorRepositoryTest {
     @Test
     void salvarAutorComLivrosTest() {
         Autor autor = new Autor();
-        autor.setName("Isabela");
+        autor.setNome("Isabela");
         autor.setNacionalidade("Americano");
         autor.setDataNascimento(LocalDate.of(1984, 1, 31).atStartOfDay());
 
