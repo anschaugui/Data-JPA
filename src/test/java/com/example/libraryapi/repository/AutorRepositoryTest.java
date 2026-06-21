@@ -1,11 +1,16 @@
 package com.example.libraryapi.repository;
 
+import com.example.libraryapi.enums.GeneroLivro;
 import com.example.libraryapi.model.Autor;
+import com.example.libraryapi.model.Livro;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,6 +20,8 @@ public class AutorRepositoryTest {
 
     @Autowired
     private AutorRepository repository;
+    @Autowired
+    private LivroRepository livroRepository;
 
     @Test
     public void salvarTest(){
@@ -75,5 +82,51 @@ public class AutorRepositoryTest {
             repository.delete(maria.get());
             System.out.println("Autor deletado: " + maria.get());
         }
+    }
+
+    @Test
+    void salvarAutorComLivrosTest() {
+        Autor autor = new Autor();
+        autor.setName("Isabela");
+        autor.setNacionalidade("Americano");
+        autor.setDataNascimento(LocalDate.of(1984, 1, 31).atStartOfDay());
+
+        // Livro 1
+        Livro livro = new Livro();
+        livro.setIsbn("25166-42323");
+        livro.setPreco(BigDecimal.valueOf(359.90));
+        livro.setGenero(GeneroLivro.FICCAO);
+        livro.setTitulo("O Roubo da casa Assombrada");
+        livro.setDataPublicacao(LocalDate.of(1999, 1, 1));
+        livro.setAutor(autor);
+
+        // Livro 2
+        Livro livro2 = new Livro();
+        livro2.setIsbn("25166-42323");
+        livro2.setPreco(BigDecimal.valueOf(650));
+        livro2.setGenero(GeneroLivro.FICCAO);
+        livro2.setTitulo("O Rato roeu a roupa do rei de roma");
+        livro2.setDataPublicacao(LocalDate.of(2005, 1, 1));
+        livro2.setAutor(autor);
+
+        // instanciando os livros do autor com um arraylist onde vou inserir os dois objetos criados a partir de "Livro"
+        autor.setLivros(new ArrayList<>());
+        autor.getLivros().add(livro);
+        autor.getLivros().add(livro2);
+
+        // persistindo os livros no banco com JPA
+        repository.save(autor);
+        livroRepository.saveAll(autor.getLivros());
+    }
+
+    @Test
+    void mostrarLivrosAutorTest(){
+        var idAutor = UUID.fromString("2ba27c20-0a07-4524-87cc-c54b25b80cc2");
+        var autor = repository.findById(idAutor).get();
+
+        // buscar os livros do autor
+        List<Livro> livrosLista = livroRepository.findByAutor(autor);
+        autor.setLivros(livrosLista);
+        autor.getLivros().forEach(System.out::println);
     }
 }

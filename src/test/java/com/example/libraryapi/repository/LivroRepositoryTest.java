@@ -105,4 +105,24 @@ class LivroRepositoryTest {
         repository.findById(id).ifPresent(livro -> System.out.println("Livro: " + livro.getTitulo() +
                " Autor: "+ livro.getAutor().getName()));
     }
+
+    @Test
+    void pesquisaPorTitulo(){
+        List<Livro> lista = repository.findByTitulo("O Roubo da casa Assombrada");
+        lista.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorIsbn(){
+        List<Livro> listaIsbn = repository.findByIsbn("25166-42323");
+        listaIsbn.forEach(System.out::println);
+    }
+
+    @Test
+    void pesquisaPorTituloAndPreco(){
+        var preco = BigDecimal.valueOf(359.90);
+        var titulo = "O Roubo da casa Assombrada";
+        List<Livro> lista = repository.findByTituloAndPreco(titulo, preco);
+        lista.forEach(System.out::println);
+    }
 }
