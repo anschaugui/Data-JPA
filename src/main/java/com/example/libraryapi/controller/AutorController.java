@@ -83,6 +83,37 @@ public class AutorController {
                         autor.getNacionalidade())
                 ).collect(Collectors.toList());
         return ResponseEntity.ok(lista);
+    }
 
+    @PutMapping("{id}")
+    public ResponseEntity<Void> atualizar(
+            @PathVariable("id") String id,
+            @RequestBody AutorDTO dto) {
+
+        // Converte o id recebido na URL, que vem como String, para UUID
+        var idAutor = UUID.fromString(id);
+
+        // Busca o autor pelo id e recebe um Optional, pois o autor pode ou não existir
+        Optional<Autor> autorOptional = service.obterPorId(idAutor);
+
+        // Verifica se nenhum autor foi encontrado com esse id
+        // Se não encontrou, retorna HTTP 404 Not Found
+        if (autorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Recupera o objeto Autor que foi encontrado dentro do Optional
+        var autor = autorOptional.get();
+
+        // Atualiza os dados da entidade Autor com as informações recebidas no DTO
+        autor.setNome(dto.nome());
+        autor.setDataNascimento(dto.dataNascimento());
+        autor.setNacionalidade(dto.nacionalidade());
+
+        // Salva a entidade atualizada no banco de dados
+        service.atualizar(autor);
+
+        // Retorna HTTP 204 No Content, indicando sucesso sem corpo na resposta
+        return ResponseEntity.noContent().build();
     }
 }
